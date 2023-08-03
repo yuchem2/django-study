@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load pybo_filter %}
+{% block content %}
+    <div id="content" class="container my-3 py-3">
+        <div class="row">
+            <div class="m-3 py-2 mx-auto" style="height: auto !important;">
+                <h3 class="pb-3 mb-0 border-bottom border-secondary font-weight-bold">Profile</h3>
+                <div class="card my-3 border rounded">
+                    <div class="card-header">
+                        사용자 정보
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item p-0">
+                            <div class="row align-items-start m-0 py-0">
+                                <div class="col-1 border-end border-1 my-0 p-2" style="text-align:center;">
+                                    Email
+                                    <div style="height:6px;"></div>
+                                </div>
+                                <div class="col-6 my-0 py-2">
+                                    <input type="text" size="45" value="{{ user.email }}" disabled>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item p-0">
+                            <div class="row align-items-start m-0 py-0">
+                                <div class="col-1 border-end border-1 m-0 p-2" style="text-align:center;">
+                                    ID
+                                    <div style="height:6px;"></div>
+                                </div>
+                                <div class="col-6 m-0 py-2">
+                                    <input type="text" size="45" value="{{ user.username }}" disabled>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item p-0">
+                            <form id="passwordForm" method="post" action="{% url 'common:profile' user.id %}" class="row align-items-start m-0 py-0">
+                                {% csrf_token %}
+                                <div class="col-1 border-end border-1 m-0 p-2 py-2" style="text-align:center;">
+                                    비밀번호
+                                    <div style="height:38px;"></div>
+                                </div>
+                                <div class="col-4 m-0 my-1">
+                                    <div class="m-0 py-1">
+                                        <input name="password" id="password" type="password" size="45">
+                                    </div>
+                                    <div class="form-check m-0 my-1">
+                                        <input class="form-check-input" type="checkbox" id="showPassword">
+                                        <label class="form-check-label" for="showPassword">비밀번호 표시</label>
+                                    </div>
+                                </div>
+                                <div class="col-auto m-0 p-0 my-1 py-1">
+                                    <input type="submit" class="btn btn-outline-primary btn-sm" value="비밀번호 변경">
+                                </div>
+                                {% if messages %}
+                                    <div class="col-auto alert alert-danger m-1 my-2 py-1">
+                                    {% for message in messages %}
+                                        {{ message.message }}
+                                    {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card my-3 border rounded">
+                    <div class="card-header">
+                        작성 글 목록
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <table class="table">
+                                <thead>
+                                    <tr class="text-center table-light">
+                                        <th>추천</th>
+                                        <th>게시판</th>
+                                        <th style="width: 50%">제목</th>
+                                        <th>날짜</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if question_list %}
+                                {% for question in question_list %}
+                                    <tr class="text-center">
+                                        <td class="align-middle">
+                                            {% if question.voter.count > 0 %}
+                                            <span class="badge badge-warning px-2 py-1">{{ question.voter.count }}</span>
+                                            {% else %}
+                                            <span class="badge badge-light px-2 py-1">{{ question.voter.count }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">{{ question.category.subject }}</td>
+                                        <td class="text-start">
+                                            <a class="text-black text-decoration-none" href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+                                            {% if question.answer_set.count  > 0 %}
+                                                <span class="text-danger small mx-2">{{ question.answer_set.count }}</span>
+                                            {% endif %}
+                                            {% if question.comments.count > 0 %}
+                                                <i class="fa-solid fa-comment"></i> {{ question.comments.count }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">{{ question.create_date }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" style="text-align: center;">작성한 질문이 없습니다.</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card my-3 border rounded">
+                    <div class="card-header">
+                        작성 답변 목록
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <table class="table">
+                                <thead>
+                                    <tr class="text-center table-light">
+                                        <th>추천</th>
+                                        <th>카테고리</th>
+                                        <th>질문 제목</th>
+                                        <th style="width: 40%">내용</th>
+                                        <th>날짜</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if answer_list %}
+                                {% for answer in answer_list %}
+                                    <tr class="text-center">
+                                        <td class="align-middle">
+                                            {% if answer.voter.count > 0 %}
+                                            <span class="badge badge-warning px-2 py-1">{{ answer.voter.count }}</span>
+                                            {% else %}
+                                            <span class="badge badge-light px-2 py-1">{{ answer.voter.count }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ answer.question.category.subject }}</td>
+                                        <td class="align-middle">
+                                            <a class="text-black text-decoration-none" href="{% url 'pybo:detail' answer.question.id %}">{{ answer.question.subject }}</a>
+                                        </td>
+                                        <td class="text-start">
+                                            {{ answer.content }}
+                                            {% if answer.comments.count > 0 %}
+                                                <i class="fa-solid fa-comment"></i> {{ answer.comments.count }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">{{ answer.create_date }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;">작성한 답변이 없습니다.</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card my-3 border rounded">
+                    <div class="card-header">
+                        작성 댓글 목록
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <table class="table">
+                                <thead>
+                                    <tr class="text-center table-light">
+                                        <th>추천</th>
+                                        <th>카테고리</th>
+                                        <th style="width: 30%">질문 혹은 답변 요약</th>
+                                        <th style="width: 30%">내용</th>
+                                        <th>작성일시</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if comment_list %}
+                                {% for comment in comment_list %}
+                                    <tr class="text-center">
+                                        <td class="align-middle">
+                                            {% if comment.voter.count > 0 %}
+                                            <span class="badge badge-warning px-2 py-1">{{ comment.voter.count }}</span>
+                                            {% else %}
+                                            <span class="badge badge-light px-2 py-1">{{ comment.voter.count }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ comment.category.subject }}
+                                        </td>
+                                        <td class="text-start align-middle">
+                                            {{ comment.parent_content }}
+                                        </td>
+                                        <td class="text-start">
+                                            {{ comment.content }}
+                                        </td>
+                                        <td class="align-middle">{{ comment.create_date}}</td>
+                                    </tr>
+                                {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;">작성한 댓글이 없습니다.</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        const show_password = document.getElementById("showPassword");
+        show_password.addEventListener('click', function() {
+            if(show_password.checked) {
+                document.getElementById("password").setAttribute("type", "text");
+            }
+            else {
+                document.getElementById("password").setAttribute("type", "password");
+            }
+        });
+    </script>
+{% endblock %}

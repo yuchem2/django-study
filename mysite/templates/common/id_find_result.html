@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+    <div id="content" class="container my-3 py-3">
+        <div class="row">
+            <div class="d-flex flex-column m-3 py-2 mx-auto" style="height: auto !important;">
+                <h3 class="font-weight-bold" style="text-align:center;">사용자ID 찾기</h3>
+                <div class="row g-4 border-top border-secondary my-3 mx-auto">
+                    <div class="mb-3" style="text-align:center; font-size:20px;">
+                        사용자 ID는 <strong>{{ username }}</strong>입니다.
+                    </div>
+                    <div class="container px-4 mb-3">
+                        <div class="row gx-5">
+                            <div class="col d-grid gap-2">
+                                <a href="{% url 'common:login' %}" class="btn btn-primary">로그인 하기</a>
+                            </div>
+                            <div class="col d-grid gap-2">
+                                <a href="{% url 'common:password_find' %}" class="btn btn-primary">비밀번호 찾기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

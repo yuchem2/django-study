@@ -1,0 +1,58 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 80px;
+    background: #eee;
+    font-size: 0.9em;
+}
+#content {
+    background: #fff;
+}
+.content_block {
+    padding: 30px;
+}
+#sidebar {
+    min-width: 140px;
+}
+.list-group-item {
+    border-top: none !important;
+}
+
+.card {
+    border: none;
+    border-radius: 0px;
+    background: #fff;
+}
+.comment {
+    border-top:solid 1px #eee;
+    font-size:0.75em;
+}
+.my-action-buttons {
+    color:#D5CCD5;
+}
+.my-action {
+    cursor: pointer;
+    background-color: #fff;
+    color: #777;
+    font-size:13px;
+    padding:3px;
+    text-decoration-line: none;
+}
+.my-action:hover {
+    background-color: #777777;
+    color: #fff;
+    text-decoration: none;
+}
+.center {
+    margin: 0 auto;
+}
+.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+.badge-light {
+    color: #212529;
+    background-color: #f8f9fa;
+}

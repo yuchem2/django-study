@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container my-3 py-3">
+        <div class="row">
+            <div id="content" class="border-top border-secondary py-2" style="height: auto !important;">
+                <h5 class="my-3 border-bottom pb-2">질문등록</h5>
+                <form method="post">
+                    {%  csrf_token %}
+                    <!-- 오류 표시 Start -->
+                    {% include 'form_errors.html' %}
+                    <!-- 오류 표시 End -->
+                    <div class="mb-3">
+                        <select class="form-select mb-3" aria-label="Default select example" id="category" name="category">
+                            <option selected>게시판</option>
+                            <option value="1">질문&답변</option>
+                            <option value="2">강좌</option>
+                            <option value="3">자유게시판</option>
+                        </select>
+                        <input type="text" class="form-control mb-3" name="subject" id="subject" placeholder="제목"
+                           value="{{ form.subject.value|default_if_none:'' }}">
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">내용</label>
+                        <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+                    </div>
+                    <!-- {{ form.as_p }} -->
+                    <button type="submit" class="btn btn-primary">저장하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

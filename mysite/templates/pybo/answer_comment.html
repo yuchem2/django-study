@@ -1,0 +1,27 @@
+{% load pybo_filter %}
+<div class="comment py-2 text-muted">
+    {% if comment.voter.count %}
+        <span class="text-danger">+{{ comment.voter.count }}</span>
+    {% endif %}
+    <span style="white-space: pre-line;" class="comment-content">{{ comment.content }}</span>
+    - <span>
+        <strong style="color:#01DFA5;">{{ comment.author }}</strong>님,
+        {% if comment.modify_date %}
+        최종 수정일: {{ comment.modify_date }}
+        {% else %}
+        {{ comment.create_date }}
+        {% endif %}
+    </span>
+    {% if request.user == comment.author %}
+        <a href="{% url 'pybo:comment_modify' question.id comment.id  %}">수정,</a>
+        <a href="javascript:void(0)" class="delete" data-uri="{% url 'pybo:comment_delete' question.id comment.id  %}">삭제,</a>
+    {% endif %}
+    {% if request.user|find_voter:comment %}
+        <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote_del' question.id comment.id  %}" class="unrecommend">
+            추천 해제,</a>
+    {% else %}
+        <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote' question.id comment.id %}" class="recommend">
+            추천,</a>
+    {% endif %}
+    <a href="javascript:answer_comment_reply({{ answer.id }}, {{ comment.id }})" id="answer_comment{{ comment.id }}" data-author="{{ comment.author }}"> 대댓글</a>
+</div>
