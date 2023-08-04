@@ -6,11 +6,11 @@
     <span style="white-space: pre-line;" class="comment-content">{{ comment.content }}</span>
     - <span>
         <strong style="color:#01DFA5;">{{ comment.author }}</strong>님,
-        {% if comment.modify_date %}
-        최종 수정일: {{ comment.modify_date }}
-        {% else %}
+    {% if comment.modify_date %}
+        수정: {{ comment.modify_date }}
+    {% else %}
         {{ comment.create_date }}
-        {% endif %}
+    {% endif %}
     </span>
     {% if request.user == comment.author %}
     <a href="{% url 'pybo:comment_modify' question.id comment.id  %}">수정,</a>

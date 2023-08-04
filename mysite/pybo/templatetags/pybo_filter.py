@@ -42,6 +42,12 @@ def include(source, arg):
 def slice_end(source, arg):
     return source[:arg]
 
+
 @register.filter
 def slice_start(source, arg):
     return source[arg:]
+
+
+@register.filter
+def get(source, arg):
+    return source[arg]

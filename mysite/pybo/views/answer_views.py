@@ -18,6 +18,7 @@ def answer_create(request, question_id):
             answer = form.save(commit=False)
             answer.author = request.user
             answer.create_date = timezone.now()
+            answer.modify_date = answer.create_date
             answer.question = question
             answer.save()
             return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', question_id=question.id), answer.id))

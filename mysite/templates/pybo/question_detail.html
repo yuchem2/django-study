@@ -22,13 +22,7 @@
                                         <p class="card-title">
                                             <strong>{{ question.author }}</strong> 님
                                         </p>
-                                        <p class="card-subtitle mb-2 text-muted">
-                                            {% if question.modify_date %}
-                                                {{ question.modify_date }}
-                                            {% else %}
-                                                {{ question.create_date }}
-                                            {% endif %}
-                                        </p>
+                                        <p class="card-subtitle mb-2 text-muted">{{ question.modify_date }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -112,6 +106,25 @@
                                     <strong>{{ question.answer_set.count }}</strong>개의 답변이 있습니다.
                                     <small class="m1-5">{{ page }} / {{ answer_list.paginator.num_pages }} Page</small>
                                 </h5>
+                                <div class="btn-group col-1" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="recent">
+                                    <label class="btn btn-outline-secondary" for="btnradio1">
+                                       <i class="fas fa-list"></i>
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="recommend" checked>
+                                    <label class="btn btn-outline-secondary" for="btnradio2">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+                                        </div>
+                                    </div>
+                                </div>
                                 {% endif %}
                             </div>
                             <div class="answer-block my-3">
@@ -139,15 +152,9 @@
                                             <div class="card small float-end bg-light" style="width: 14rem;">
                                                 <div class="card-body p-2 px-3">
                                                     <p class="card-title">
-                                                        <strong>{{ question.author }}</strong> 님
+                                                        <strong>{{ answer.author }}</strong> 님
                                                     </p>
-                                                    <p class="card-subtitle mb-2 text-muted">
-                                                        {% if question.modify_date %}
-                                                            {{ question.modify_date }}
-                                                        {% else %}
-                                                            {{ question.create_date }}
-                                                        {% endif %}
-                                                    </p>
+                                                    <p class="card-subtitle mb-2 text-muted">{{ answer.modify_date }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -233,7 +240,7 @@
                                 <ul class="pagination justify-content-center">
                                     {% if answer_list.has_previous %}
                                         <li class="page-item">
-                                            <a class="page-link" href="?page={{ answer_list.previous_page_number }}">이전</a>
+                                            <a class="page-link" data-page="{{ answer_list.previous_page_number }}" href="javascript:void(0)">이전</a>
                                         </li>
                                     {% else %}
                                         <li class="page-item disabled">
@@ -244,18 +251,18 @@
                                         {% if page_number >= answer_list.number|add:-5 and page_number <= answer_list.number|add:5 %}
                                         {% if page_number == answer_list.number %}
                                             <li class="page-item active" aria-current="page">
-                                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                                                <a class="page-link" data-page="{{ page_number }}" href="javascript:void(0)">{{ page_number }}</a>
                                             </li>
                                         {% else %}
                                             <li class="page-item">
-                                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                                                <a class="page-link" data-page="{{ page_number }}" href="javascript:void(0)">{{ page_number }}</a>
                                             </li>
                                         {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                     {% if answer_list.has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ answer_list.next_page_number }}">다음</a>
+                                        <a class="page-link" data-page="{{ answer_list.next_page_number }}" href="javascript:void(0)">다음</a>
                                     </li>
                                     {% else %}
                                         <li class="page-item disabled">
@@ -267,7 +274,9 @@
                                 {% endif %}
                             </div>
                             <form id="searchForm" method="get" action="{% url 'pybo:detail' question.id %}">
+                                <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
                                 <input type="hidden" id="page" name="page" value="{{ page }}">
+                                <input type="hidden" id="sort" name="sort" value="{{ sort }}">
                             </form>
                             <a href="{% url 'pybo:index' %}" class="btn btn-primary"><i class="fas fa-list"></i> 목록으로</a>
                         </div>
@@ -279,6 +288,14 @@
 {% endblock %}
 {% block script %}
     <script type='text/javascript'>
+        const sort_radio = document.getElementsByName('btnradio');
+        const sel_var = document.getElementById('sort').value;
+        for(var i=0; i<sort_radio.length; i++) {
+            if(sort_radio[i].value == sel_var) {
+                sort_radio[i].checked = true;
+            }
+        }
+
         function question_comment() {
             const comment = document.getElementById("question_comment");
             if(comment.style.display == "none") {
@@ -352,13 +369,33 @@
             });
         });
 
+        Array.from(sort_radio).forEach(function(element) {
+            element.addEventListener('change', function() {
+                if(element.checked) {
+                    document.getElementById('page').value = 1;
+                    document.getElementById('sort').value = element.value;
+                    document.getElementById('searchForm').submit();
+                }
+            });
+        });
+
         const page_elements = document.getElementsByClassName("page-link");
         Array.from(page_elements).forEach(function(element) {
             element.addEventListener('click', function() {
                 document.getElementById('page').value = this.dataset.page;
+                document.getElementById('sort').value = document.getElementById('sort').value;
                 document.getElementById('searchForm').submit();
             });
         });
 
+        const btn_search = document.getElementById("btn_search");
+        if (btn_search != null) {
+            btn_search.addEventListener('click', function() {
+                document.getElementById('kw').value = document.getElementById('search_kw').value;
+                document.getElementById('page').value = 1;
+                document.getElementById('sort').value = "recent";
+                document.getElementById('searchForm').submit();
+            });
+        }
     </script>
 {% endblock %}

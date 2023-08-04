@@ -98,7 +98,7 @@
                                                 <i class="fa-solid fa-comment"></i> {{ question.comments.count }}
                                             {% endif %}
                                         </td>
-                                        <td class="align-middle">{{ question.create_date }}</td>
+                                        <td class="align-middle">{{ question.modify_date }}</td>
                                     </tr>
                                 {% endfor %}
                                 {% else %}
@@ -148,7 +148,7 @@
                                                 <i class="fa-solid fa-comment"></i> {{ answer.comments.count }}
                                             {% endif %}
                                         </td>
-                                        <td class="align-middle">{{ answer.create_date }}</td>
+                                        <td class="align-middle">{{ answer.modify_date }}</td>
                                     </tr>
                                 {% endfor %}
                                 {% else %}
@@ -197,7 +197,13 @@
                                         <td class="text-start">
                                             {{ comment.content }}
                                         </td>
-                                        <td class="align-middle">{{ comment.create_date}}</td>
+                                        <td class="align-middle">
+                                            {% if comment.modify_date %}
+                                                수정: {{ comment.modify_date }}
+                                            {% else %}
+                                                {{ comment.create_date }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 {% else %}

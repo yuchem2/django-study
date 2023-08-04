@@ -16,8 +16,10 @@ def question_list(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     if sort == 'recommend':
         question_list = Question.objects.filter(category=category_id).annotate(voter_count=Count('voter')).order_by('-voter_count')
+    elif sort == 'hot':
+        question_list = Question.objects.filter(category=category_id).order_by('-hits')
     else:
-        question_list = Question.objects.filter(category=category_id).order_by('-create_date')
+        question_list = Question.objects.filter(category=category_id).order_by('-modify_date')
 
     if kw:
         question_list = question_list.filter(
@@ -41,6 +43,7 @@ def question_create(request):
             question = form.save(commit=False)
             question.author = request.user
             question.create_date = timezone.now()
+            question.modify_date = question.create_date
             question.save()
             return redirect('pybo:index')
     else:

@@ -26,6 +26,7 @@ class Question(models.Model):
     modify_date = models.DateTimeField(null=True, blank=True)               # 수정 날짜
     voter = models.ManyToManyField(User, related_name='voter_question')     # 추천인 추가
     comments = models.ManyToManyField(Comment, related_name='comment_question')
+    hits = models.DecimalField(max_digits=7, decimal_places=0, default=0)
 
     def __str__(self):
         return self.subject
