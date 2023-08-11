@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container my-3 py-3">
         <div class="row">
-            <div id="content" class="py-2" style="height: auto !important;">
+            <div id="content_box" class="py-2" style="height: auto !important;">
                 <h5 class="my-3 border-bottom pb-2">답변등록</h5>
                 <div class="mb-3">
                     <label for="content">질문내용</label>
@@ -20,4 +20,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        const editor = new SimpleMDE();
+    </script>
 {% endblock %}

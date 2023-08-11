@@ -9,8 +9,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
     <!-- pybo CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/c7dc2c74ff.js" crossorigin="anonymous"></script>
+    <!-- SimpleSDM CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'cdn.jsdelivr.net_npm_simplemde@1.11.2_dist_simplemde.min.css' %}">
     <title>Hello, pybo!</title>
 </head>
 <body>
@@ -22,6 +22,10 @@
     <!-- 기본 템플릿 안에 삽입될 내용 End -->
     <!-- Bootstrap JS -->
     <script src="{% static 'bootstrap.min.js' %}"></script>
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/c7dc2c74ff.js" crossorigin="anonymous"></script>
+    <!-- SimpleSDM JS -->
+    <script src="{% static 'cdn.jsdelivr.net_npm_simplemde@1.11.2_dist_simplemde.min.js' %}"></script>
     <!-- 자바 스크립트 Start -->
     {% block script %}
     {% endblock %}

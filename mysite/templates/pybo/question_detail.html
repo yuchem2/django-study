@@ -7,17 +7,17 @@
                 {% include "sidebar.html" %}
             </div>
             <div class="col-sm-12 col-md-9 col-lg-10 p-2" style="height: auto !important;">
-                <div id="content" style="height: auto !important;">
+                <div id="content_box" style="height: auto !important;">
                     <div class="container py-3">
                         <!--message 표시-->
                         {% include "messages_errors.html" %}
                         <div class="my-3" style="height: auto !important;">
                             <h5 class="pb-3 mb-0 border-bottom border-secondary font-weight-bold">{{ question.subject }}</h5>
                             <div class="mt-3 mark-content">
-                                <div class="p-2 bd-highlight fw-bold">{{ question.content }}</div>
+                                <div class="p-2 bd-highlight fw-bold">{{ question.content|mark }}</div>
                             </div>
                             <div class="clearfix my-2">
-                                <div class="card small float-end bg-light" style="width: 14rem;">
+                                <div class="card small float-end bg-light rounded" style="width: 14rem;">
                                     <div class="card-body p-2 px-3">
                                         <p class="card-title">
                                             <strong>{{ question.author }}</strong> 님
@@ -64,7 +64,7 @@
                                         {% include "form_errors.html" %}
                                         {% endif %}
                                         <div class="d-flex mb-4">
-                                            <textarea placeholder="댓글을 입력하시오..." name="content" id="question_content" class="form-control"></textarea>
+                                            <textarea class="form-control" placeholder="댓글을 입력하시오..." name="content" id="question_content"></textarea>
                                         </div>
                                         <input type="submit" value="댓글입력" class="btn btn-primary">
                                     </form>
@@ -136,8 +136,8 @@
                                     {% if form|check_label:'답변내용' %}
                                     {% include "form_errors.html" %}
                                     {% endif %}
-                                    <div class="d-flex mb-4">
-                                        <textarea placeholder="답변을 입력하시오..."name="content" id="content" class="form-control" rows="5"></textarea>
+                                    <div class="mb-1 my-1">
+                                        <textarea class="form-control" placeholder="답변을 입력하시오..."name="content" id="content" rows="3"></textarea>
                                     </div>
                                     <input type="submit" value="답변등록" class="btn btn-primary">
                                     </form>
@@ -146,10 +146,10 @@
                                 {% if answer_list %}
                                 {% for answer in answer_list %}
                                     <a id="answer_{{ answer.id }}"></a>
-                                    <div class="answer-item p-3 my-3 border">
+                                    <div class="answer-item p-3 my-3 border rounded">
                                         <div class="p-2">{{ answer.content|mark }}</div>
                                         <div class="clearfix my-2">
-                                            <div class="card small float-end bg-light" style="width: 14rem;">
+                                            <div class="card small float-end bg-light rounded" style="width: 14rem;">
                                                 <div class="card-body p-2 px-3">
                                                     <p class="card-title">
                                                         <strong>{{ answer.author }}</strong> 님
@@ -288,6 +288,11 @@
 {% endblock %}
 {% block script %}
     <script type='text/javascript'>
+        const editor = new SimpleMDE({
+            element: document.getElementById("content"),
+
+        });
+
         const sort_radio = document.getElementsByName('btnradio');
         const sel_var = document.getElementById('sort').value;
         for(var i=0; i<sort_radio.length; i++) {
